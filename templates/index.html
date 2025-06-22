@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Background Remover</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}">
+</head>
+<body>
+    <!-- Hero section (Jumbotron) -->
+    <section class="hero is-info is-bold">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title is-1">Remove Background Image</h1>
+                <h2 class="subtitle">Upload an image and we'll remove the background for you</h2>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main content -->
+    <section class="section">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-half">
+                    <div class="box">
+                        <div class="file has-name is-boxed is-centered is-info">
+                            <label class="file-label">
+                                <input class="file-input" type="file" name="image" id="image-upload" accept="image/*">
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                        <i class="fas fa-upload"></i>
+                                    </span>
+                                    <span class="file-label">
+                                        Choose an image...
+                                    </span>
+                                </span>
+                                <span class="file-name" id="file-name">
+                                    No file selected
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="mt-4" id="progress-container" style="display: none;">
+                            <progress class="progress is-info" id="upload-progress" value="0" max="100">0%</progress>
+                            <p class="has-text-centered" id="progress-text">0%</p>
+                        </div>
+
+                        <div class="mt-4 has-text-centered">
+                            <button class="button is-info" id="upload-button" disabled>
+                                Remove Background
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Result Modal -->
+    <div class="modal" id="result-modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <h3 class="title is-4 has-text-centered">Background Removed!</h3>
+                <div class="has-text-centered">
+                    <img id="result-image" src="" alt="Processed Image" style="max-width: 100%;">
+                </div>
+                <div class="has-text-centered mt-4">
+                    <a id="download-link" class="button is-success" href="" download="background-removed.png">
+                        Download Image
+                    </a>
+                    <button class="button is-primary ml-2" id="close-modal">
+                        Process Another Image
+                    </button>
+                </div>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                &copy; <span id="current-year"></span> Created by Jared Odulio using Python with FastAPI
+            </p>
+        </div>
+    </footer>
+
+    <!-- Font Awesome for icons -->
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', path='js/script.js') }}"></script>
+    <!-- Dynamic year script -->
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+/* Additional styles for Background Remover app */
+
+.hero.is-primary {
+    background-color: #add8e6;
+}
+
+.file-input {
+    cursor: pointer;
+}
+
+.box {
+    box-shadow: 0 2px 15px rgba(10, 10, 10, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.box:hover {
+    box-shadow: 0 5px 25px rgba(10, 10, 10, 0.2);
+}
+
+#result-image {
+    max-height: 70vh;
+    object-fit: contain;
+}
+
+.modal-content {
+    width: 80%;
+    max-width: 800px;
+}
