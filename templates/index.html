@@ -7,6 +7,13 @@
     <meta name="keywords" content="background remover, image editing, remove background, transparent background, photo editing, online tool, image processing">
     <meta name="author" content="Jared Odulio">
     <meta name="robots" content="index, follow">
+    <og property="og:title" content="Background Remover - Free Online Tool">
+    <og property="og:description" content="Remove backgrounds from images instantly with our free online tool. Upload your image and get a transparent background in seconds.">
+    <og property="og:image" content="{{ url_for('static', path='images/thumbnail.png') }}">
+    <og property="og:url" content="{{ request.url }}">
+    <og property="og:type" content="website">
+    <og property="og:site_name" content="Background Remover">
+
     <title>Background Remover - Free Online Background Removal Tool</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}">

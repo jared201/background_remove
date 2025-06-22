@@ -4,3 +4,4 @@ pillow>=9.0.0
 python-multipart>=0.0.5
 uvicorn>=0.15.0
 onnxruntime>=1.15.0
+jinja2>=3.0.0
