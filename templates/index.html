@@ -7,12 +7,12 @@
     <meta name="keywords" content="background remover, image editing, remove background, transparent background, photo editing, online tool, image processing">
     <meta name="author" content="Jared Odulio">
     <meta name="robots" content="index, follow">
-    <og property="og:title" content="Background Remover - Free Online Tool">
-    <og property="og:description" content="Remove backgrounds from images instantly with our free online tool. Upload your image and get a transparent background in seconds.">
-    <og property="og:image" content="{{ url_for('static', path='images/thumbnail.png') }}">
-    <og property="og:url" content="{{ request.url }}">
-    <og property="og:type" content="website">
-    <og property="og:site_name" content="Background Remover">
+    <meta property="og:title" content="Background Remover - Free Online Tool">
+    <meta property="og:description" content="Remove backgrounds from images instantly with our free online tool. Upload your image and get a transparent background in seconds.">
+    <meta property="og:image" content="{{ url_for('static', path='images/thumbnail.png') }}">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Background Remover">
 
     <title>Background Remover - Free Online Background Removal Tool</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
@@ -55,6 +55,13 @@
                         <div class="mt-4" id="progress-container" style="display: none;">
                             <progress class="progress is-info" id="upload-progress" value="0" max="100">0%</progress>
                             <p class="has-text-centered" id="progress-text">0%</p>
+                        </div>
+
+                        <div class="mt-4" id="processing-container" style="display: none;">
+                            <div class="has-text-centered">
+                                <div class="loader is-loading" style="margin: 0 auto; height: 50px; width: 50px;"></div>
+                                <p class="mt-2">Your image is being generated...</p>
+                            </div>
                         </div>
 
                         <div class="mt-4 has-text-centered">
