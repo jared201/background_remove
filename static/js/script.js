@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressContainer = document.getElementById('progress-container');
     const progressBar = document.getElementById('upload-progress');
     const progressText = document.getElementById('progress-text');
+    const processingContainer = document.getElementById('processing-container');
     const resultModal = document.getElementById('result-modal');
     const resultImage = document.getElementById('result-image');
     const downloadLink = document.getElementById('download-link');
@@ -40,13 +41,19 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // Use XMLHttpRequest for progress tracking
             const xhr = new XMLHttpRequest();
-            
+
             // Track upload progress
             xhr.upload.addEventListener('progress', (event) => {
                 if (event.lengthComputable) {
                     const percentComplete = Math.round((event.loaded / event.total) * 100);
                     progressBar.value = percentComplete;
                     progressText.textContent = `${percentComplete}%`;
+
+                    // When upload is complete, show the processing container
+                    if (percentComplete === 100) {
+                        progressContainer.style.display = 'none';
+                        processingContainer.style.display = 'block';
+                    }
                 }
             });
 
@@ -56,37 +63,40 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Create object URL from the response
                     const blob = new Blob([xhr.response], { type: 'image/png' });
                     const imageUrl = URL.createObjectURL(blob);
-                    
+
                     // Set image source and download link
                     resultImage.src = imageUrl;
                     downloadLink.href = imageUrl;
-                    
+
                     // Show the modal
                     resultModal.classList.add('is-active');
                 } else {
                     alert('Error processing image. Please try again.');
                 }
-                
-                // Reset progress
+
+                // Reset progress and processing
                 progressContainer.style.display = 'none';
+                processingContainer.style.display = 'none';
             });
 
             // Handle errors
             xhr.addEventListener('error', () => {
                 alert('Upload failed. Please try again.');
                 progressContainer.style.display = 'none';
+                processingContainer.style.display = 'none';
             });
 
             // Configure request
             xhr.open('POST', '/remove-background');
             xhr.responseType = 'arraybuffer';
-            
+
             // Send the request
             xhr.send(formData);
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred. Please try again.');
             progressContainer.style.display = 'none';
+            processingContainer.style.display = 'none';
         }
     });
 
