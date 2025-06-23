@@ -49,10 +49,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     progressBar.value = percentComplete;
                     progressText.textContent = `${percentComplete}%`;
 
-                    // When upload is complete, show the processing container
+                    // When upload is complete, hide the progress container and show the processing container after a small delay
                     if (percentComplete === 100) {
-                        progressContainer.style.display = 'none';
-                        processingContainer.style.display = 'block';
+                        // Add a small delay to ensure the progress bar is fully visible at 100% before showing the loader
+                        setTimeout(() => {
+                            progressContainer.style.display = 'none';
+                            processingContainer.style.display = 'block';
+                        }, 500); // 500ms delay
                     }
                 }
             });
