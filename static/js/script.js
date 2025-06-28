@@ -14,6 +14,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalBackground = document.querySelector('.modal-background');
     const modalClose = document.querySelector('.modal-close');
 
+    // JWT Authentication
+    let authToken = localStorage.getItem('authToken');
+
+    // Function to get a JWT token
+    async function getAuthToken() {
+        try {
+            // For demo purposes, we're using hardcoded credentials
+            // In a real application, you would use a login form
+            const formData = new FormData();
+            formData.append('username', 'user');
+            formData.append('password', 'password');
+
+            const response = await fetch('/token', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                authToken = data.access_token;
+                localStorage.setItem('authToken', authToken);
+                return true;
+            } else {
+                console.error('Authentication failed');
+                return false;
+            }
+        } catch (error) {
+            console.error('Error during authentication:', error);
+            return false;
+        }
+    }
+
     // Update file name display when a file is selected
     fileInput.addEventListener('change', () => {
         if (fileInput.files.length > 0) {
@@ -28,6 +60,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle file upload
     uploadButton.addEventListener('click', async () => {
         if (!fileInput.files[0]) return;
+
+        // Ensure we have a valid auth token
+        if (!authToken) {
+            const success = await getAuthToken();
+            if (!success) {
+                alert('Authentication failed. Please try again.');
+                return;
+            }
+        }
 
         // Show progress bar
         progressContainer.style.display = 'block';
@@ -61,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Handle response
-            xhr.addEventListener('load', () => {
+            xhr.addEventListener('load', async () => {
                 if (xhr.status === 200) {
                     // Create object URL from the response
                     const blob = new Blob([xhr.response], { type: 'image/png' });
@@ -73,6 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Show the modal
                     resultModal.classList.add('is-active');
+                } else if (xhr.status === 401) {
+                    // Token might be expired, try to get a new one
+                    const success = await getAuthToken();
+                    if (success) {
+                        alert('Session expired. Please try again.');
+                    } else {
+                        alert('Authentication failed. Please refresh the page and try again.');
+                    }
                 } else {
                     alert('Error processing image. Please try again.');
                 }
@@ -91,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Configure request
             xhr.open('POST', '/remove-background');
+            xhr.setRequestHeader('Authorization', `Bearer ${authToken}`);
             xhr.responseType = 'arraybuffer';
 
             // Send the request
