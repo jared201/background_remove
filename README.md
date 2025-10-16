@@ -156,3 +156,4 @@ FastAPI automatically generates interactive API documentation.
 - The service uses the `rembg` library which downloads a model on first use
 - For best results, use images with clear subjects and contrasting backgrounds
 - The service returns PNG images to preserve transparency
+- Deployment tip (Render.com and similar): The app forces CPU-only inference to avoid GPU/DRM probing errors like `ReadFileContents Failed to open file: "/sys/class/drm/card0/device/vendor"`. If you override environment variables, ensure `ONNXRUNTIME_FORCE_CPU=1` remains set.

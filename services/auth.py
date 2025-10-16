@@ -13,7 +13,12 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Configure bcrypt to silently truncate passwords longer than 72 bytes to avoid deployment errors
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto",
+    bcrypt__truncate_error=False
+)
 
 # OAuth2 scheme for token extraction from requests
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")

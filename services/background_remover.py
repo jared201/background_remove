@@ -1,9 +1,9 @@
 from PIL import Image
 import io
-import rembg
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 import logging
+import os
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -13,10 +13,29 @@ class BackgroundRemover:
     """Service for removing backgrounds from images."""
 
     def __init__(self):
+        # Ensure onnxruntime stays on CPU (prevents GPU/DRM probing on some platforms like Render)
+        os.environ.setdefault("ONNXRUNTIME_FORCE_CPU", "1")
+
         # Import rembg here to avoid loading the model until needed
         try:
             import rembg
             self.rembg = rembg
+
+            # Try to create a CPU-only session to avoid any GPU/DRM detection
+            self.session = None
+            try:
+                if hasattr(self.rembg, "new_session"):
+                    # Prefer explicit CPU provider
+                    self.session = self.rembg.new_session(model_name="u2net", providers=["CPUExecutionProvider"])  # type: ignore[arg-type]
+            except Exception as e:
+                logger.warning(f"Falling back to default rembg session due to: {e}")
+                try:
+                    if hasattr(self.rembg, "new_session"):
+                        self.session = self.rembg.new_session(model_name="u2net")
+                except Exception as e2:
+                    logger.warning(f"Could not create rembg session at init: {e2}")
+                    self.session = None
+
             # Create a thread pool executor for CPU-bound tasks
             self.executor = ThreadPoolExecutor(max_workers=4)
         except ImportError:
@@ -55,8 +74,12 @@ class BackgroundRemover:
         Returns:
             Processed image data as bytes with transparent background
         """
-        # Process the image with rembg
-        return self.rembg.remove(image_data)
+        # Process the image with rembg, forcing CPU-only session when available
+        try:
+            return self.rembg.remove(image_data, session=self.session if hasattr(self, "session") else None)
+        except TypeError:
+            # Older rembg versions may not accept session kwarg
+            return self.rembg.remove(image_data)
 
     async def remove_background_from_file(self, input_path: str, output_path: str) -> None:
         """
